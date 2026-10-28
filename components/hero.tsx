@@ -21,14 +21,14 @@ export function Hero() {
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <a
-              href="#about"
+              href="/about"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
             >
               회사 알아보기
               <ArrowRight className="size-4" aria-hidden="true" />
             </a>
             <a
-              href="#brands"
+              href="/brands"
               className="inline-flex items-center rounded-full border border-border bg-card px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
             >
               대표 브랜드
