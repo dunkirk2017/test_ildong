@@ -7,7 +7,16 @@ import { authClient } from '@/lib/auth-client'
 import { FormMessage, SubmitButton, toKoreanError } from '@/components/auth-shell'
 
 // 메일로 받은 6자리 코드를 입력받아 인증하고, 인증되면 자동 로그인 상태로 target으로 보낸다
-export function VerifyCodeForm({ email, target = '/' }: { email: string; target?: string }) {
+// ready: 가입 요청처럼 먼저 끝나야 하는 작업. 실패하면 부모가 화면을 되돌리므로 여기서는 조용히 멈춘다
+export function VerifyCodeForm({
+  email,
+  target = '/',
+  ready = Promise.resolve(),
+}: {
+  email: string
+  target?: string
+  ready?: Promise<void>
+}) {
   const router = useRouter()
   const [code, setCode] = useState('')
   const [pending, setPending] = useState(false)
@@ -17,6 +26,11 @@ export function VerifyCodeForm({ email, target = '/' }: { email: string; target?
     e.preventDefault()
     setMessage(null)
     setPending(true)
+    try {
+      await ready
+    } catch {
+      return
+    }
     const { error } = await authClient.emailOtp.verifyEmail({ email, otp: code })
     setPending(false)
 
@@ -30,6 +44,11 @@ export function VerifyCodeForm({ email, target = '/' }: { email: string; target?
 
   async function resend() {
     setMessage(null)
+    try {
+      await ready
+    } catch {
+      return
+    }
     const { error } = await authClient.emailOtp.sendVerificationOtp({ email, type: 'email-verification' })
     setMessage(error ? { tone: 'error', text: toKoreanError(error) } : { tone: 'info', text: '새 인증코드를 보냈습니다.' })
     setCode('')
@@ -45,6 +64,9 @@ export function VerifyCodeForm({ email, target = '/' }: { email: string; target?
           <strong className="text-foreground">{email}</strong>
           <br />
           으로 보낸 6자리 인증코드를 입력해 주세요.
+        </p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          이미 가입된 이메일이면 인증코드 대신 안내 메일이 발송됩니다.
         </p>
       </div>
 

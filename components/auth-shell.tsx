@@ -86,6 +86,12 @@ const errorMessages: Record<string, string> = {
   INVALID_OTP: '인증코드가 올바르지 않습니다.',
   OTP_EXPIRED: '인증코드가 만료되었습니다. 코드를 다시 받아 주세요.',
   TOO_MANY_ATTEMPTS: '시도 횟수를 초과했습니다. 코드를 다시 받아 주세요.',
+  BANNED_USER: '이용이 정지된 계정입니다. 관리자에게 문의해 주세요.',
+  INVALID_PASSWORD: '비밀번호가 올바르지 않습니다.',
+  CREDENTIAL_ACCOUNT_NOT_FOUND: '비밀번호로 가입한 계정이 아닙니다.',
+  SESSION_EXPIRED: '보안을 위해 다시 로그인한 뒤 시도해 주세요.',
+  USER_NOT_FOUND: '해당 회원을 찾을 수 없습니다.',
+  PASSWORD_TOO_LONG: '비밀번호가 너무 깁니다.',
 }
 
 export function toKoreanError(error: { code?: string; message?: string }) {

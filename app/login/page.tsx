@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
@@ -18,6 +18,12 @@ export default function LoginPage() {
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
   const [unverifiedEmail, setUnverifiedEmail] = useState('')
+  const [justReset, setJustReset] = useState(false)
+
+  // 비밀번호 찾기에서 넘어온 경우(?reset=1) 안내 문구를 보여준다
+  useEffect(() => {
+    setJustReset(new URLSearchParams(window.location.search).has('reset'))
+  }, [])
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -77,9 +83,18 @@ export default function LoginPage() {
       <form onSubmit={onSubmit} className="space-y-4">
         <Field label="이메일" name="email" type="email" autoComplete="email" placeholder="name@example.com" required />
         <Field label="비밀번호" name="password" type="password" autoComplete="current-password" required />
-        {error && <FormMessage tone="error">{error}</FormMessage>}
+        {error ? (
+          <FormMessage tone="error">{error}</FormMessage>
+        ) : (
+          justReset && <FormMessage tone="info">비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요.</FormMessage>
+        )}
         <SubmitButton pending={pending}>로그인</SubmitButton>
       </form>
+      <p className="mt-5 text-center text-sm text-muted-foreground">
+        <Link href="/find-id" className="hover:text-foreground">아이디 찾기</Link>
+        <span className="mx-2 text-border">|</span>
+        <Link href="/reset-password" className="hover:text-foreground">비밀번호 찾기</Link>
+      </p>
     </AuthShell>
   )
 }
